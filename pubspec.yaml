@@ -1,0 +1,55 @@
+name: kataomoi_app
+description: KATAOMOI向けNFC名刺アプリ
+publish_to: 'none'
+
+version: 1.0.0+1
+
+environment:
+  sdk: '>=3.0.0 <4.0.0'
+
+dependencies:
+  flutter:
+    sdk: flutter
+  
+  # 状態管理
+  flutter_riverpod: ^2.4.9
+  
+  # HTTP通信
+  dio: ^5.4.0
+  
+  # ディープリンク
+  uni_links: ^0.5.1
+  
+  # URL起動
+  url_launcher: ^6.2.2
+  
+  # NFC機能
+  nfc_manager: ^3.0.0
+  
+  # 環境変数
+  flutter_dotenv: ^5.1.0
+  
+  # ユーティリティ
+  equatable: ^2.0.5
+  json_annotation: ^4.8.1
+  dartz: ^0.10.1
+  
+  # UI
+  cupertino_icons: ^1.0.2
+
+dev_dependencies:
+  flutter_test:
+    sdk: flutter
+  
+  flutter_lints: ^3.0.0
+  
+  # JSON生成
+  json_serializable: ^6.7.1
+  build_runner: ^2.4.7
+
+flutter:
+  uses-material-design: true
+  
+  assets:
+    - .env
+
