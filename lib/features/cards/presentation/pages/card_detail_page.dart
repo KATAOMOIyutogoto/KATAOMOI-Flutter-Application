@@ -4,6 +4,7 @@ import 'package:url_launcher/url_launcher.dart';
 import '../providers/card_provider.dart';
 import '../widgets/url_edit_widget.dart';
 import '../../../../core/constants/env_constants.dart';
+import '../../../../core/theme/marble_background.dart';
 
 class CardDetailPage extends ConsumerStatefulWidget {
   final String cardId;
@@ -75,6 +76,7 @@ class _CardDetailPageState extends ConsumerState<CardDetailPage> {
     });
 
     return Scaffold(
+      backgroundColor: Colors.transparent,
       appBar: AppBar(
         title: const Text(
           'カード詳細',
@@ -83,7 +85,7 @@ class _CardDetailPageState extends ConsumerState<CardDetailPage> {
             letterSpacing: 1.2,
           ),
         ),
-        backgroundColor: Theme.of(context).colorScheme.inversePrimary,
+        backgroundColor: Colors.transparent,
         elevation: 0,
         actions: [
           Container(
@@ -93,7 +95,7 @@ class _CardDetailPageState extends ConsumerState<CardDetailPage> {
               onPressed: () => _testRedirect(),
               tooltip: 'リダイレクトをテスト',
               style: IconButton.styleFrom(
-                backgroundColor: Colors.white.withOpacity(0.1),
+                backgroundColor: Colors.white.withOpacity(0.2),
                 shape: RoundedRectangleBorder(
                   borderRadius: BorderRadius.circular(12),
                 ),
@@ -102,19 +104,7 @@ class _CardDetailPageState extends ConsumerState<CardDetailPage> {
           ),
         ],
       ),
-      body: Container(
-        decoration: BoxDecoration(
-          gradient: LinearGradient(
-            begin: Alignment.topCenter,
-            end: Alignment.bottomCenter,
-            colors: [
-              Theme.of(context).colorScheme.inversePrimary.withOpacity(0.1),
-              Colors.white,
-            ],
-          ),
-        ),
-        child: _buildBody(cardState),
-      ),
+      body: _buildBody(cardState),
     );
   }
 
@@ -199,11 +189,15 @@ class _CardDetailPageState extends ConsumerState<CardDetailPage> {
           // カード情報カード
           Container(
             decoration: BoxDecoration(
-              color: Colors.white,
+              color: Colors.white.withOpacity(0.7),
               borderRadius: BorderRadius.circular(20),
+              border: Border.all(
+                color: Theme.of(context).colorScheme.primary.withOpacity(0.6),
+                width: 1,
+              ),
               boxShadow: [
                 BoxShadow(
-                  color: Colors.black.withOpacity(0.05),
+                  color: Colors.purple.withOpacity(0.15),
                   blurRadius: 20,
                   offset: const Offset(0, 8),
                 ),
@@ -229,11 +223,12 @@ class _CardDetailPageState extends ConsumerState<CardDetailPage> {
                         ),
                       ),
                       const SizedBox(width: 16),
-                      const Text(
+                      Text(
                         'カード情報',
                         style: TextStyle(
                           fontSize: 20,
                           fontWeight: FontWeight.bold,
+                          color: Theme.of(context).colorScheme.primary,
                         ),
                       ),
                     ],
@@ -268,7 +263,11 @@ class _CardDetailPageState extends ConsumerState<CardDetailPage> {
                 children: [
                   Text(
                     'リダイレクトURL',
-                    style: Theme.of(context).textTheme.titleSmall,
+                    style: TextStyle(
+                      fontSize: 16,
+                      fontWeight: FontWeight.w600,
+                      color: Theme.of(context).colorScheme.primary,
+                    ),
                   ),
                   const SizedBox(height: 8),
                   Text(
@@ -280,7 +279,7 @@ class _CardDetailPageState extends ConsumerState<CardDetailPage> {
                   const SizedBox(height: 8),
                   const Text(
                     'このURLをNFCタグに書き込んでください',
-                    style: TextStyle(fontSize: 12, color: Colors.grey),
+                    style: TextStyle(fontSize: 12, color: Colors.black54),
                   ),
                 ],
               ),
@@ -322,15 +321,17 @@ class _CardDetailPageState extends ConsumerState<CardDetailPage> {
     return Container(
       padding: const EdgeInsets.all(16),
       decoration: BoxDecoration(
-        color: Colors.grey[50],
+        color: Colors.white.withOpacity(0.5),
         borderRadius: BorderRadius.circular(12),
-        border: Border.all(color: Colors.grey[200]!),
+        border: Border.all(
+          color: Theme.of(context).colorScheme.primary.withOpacity(0.3),
+        ),
       ),
       child: Row(
         children: [
           Icon(
             icon,
-            color: color ?? Colors.grey[600],
+            color: color ?? Theme.of(context).colorScheme.primary,
             size: 20,
           ),
           const SizedBox(width: 12),
@@ -342,7 +343,7 @@ class _CardDetailPageState extends ConsumerState<CardDetailPage> {
                   label,
                   style: TextStyle(
                     fontSize: 12,
-                    color: Colors.grey[600],
+                    color: Colors.black54,
                     fontWeight: FontWeight.w500,
                   ),
                 ),
@@ -352,7 +353,7 @@ class _CardDetailPageState extends ConsumerState<CardDetailPage> {
                   style: TextStyle(
                     fontSize: 16,
                     fontWeight: FontWeight.w600,
-                    color: color,
+                    color: color ?? Colors.black87,
                   ),
                 ),
               ],

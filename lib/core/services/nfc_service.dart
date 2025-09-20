@@ -54,9 +54,9 @@ class NfcService {
     Function(String) onNfcDetected,
     Function(String) onError,
   ) {
-    // デモ用のNFCデータをシミュレート
+    // デモ用のNFCデータをシミュレート（実際のURL形式）
     Future.delayed(const Duration(seconds: 2), () {
-      onNfcDetected('550e8400-e29b-41d4-a716-446655440000');
+      onNfcDetected('https://go.kataomoi.org/c/550e8400-e29b-41d4-a716-446655440000');
     });
   }
 

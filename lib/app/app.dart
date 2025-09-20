@@ -2,6 +2,7 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:uni_links/uni_links.dart';
 import '../core/theme/app_theme.dart';
+import '../core/theme/marble_background.dart';
 import '../features/home/presentation/pages/home_page.dart';
 import '../features/claim/presentation/pages/claim_page.dart';
 import '../features/cards/presentation/pages/card_detail_page.dart';
@@ -51,7 +52,9 @@ class _MyAppState extends State<MyApp> {
       if (cardId != null) {
         Navigator.of(context).push(
           MaterialPageRoute(
-            builder: (context) => ClaimPage(cardId: cardId),
+            builder: (context) => MarbleBackground(
+              child: ClaimPage(cardId: cardId),
+            ),
           ),
         );
       }
@@ -62,24 +65,34 @@ class _MyAppState extends State<MyApp> {
   Widget build(BuildContext context) {
     return MaterialApp(
       title: 'KATAOMOI APP',
-      theme: AppTheme.lightTheme,
-      home: const HomePage(),
+      theme: AppTheme.marbleTheme,
+      home: const MarbleBackground(
+        child: HomePage(),
+      ),
       routes: {
         '/claim': (context) {
           final args = ModalRoute.of(context)?.settings.arguments as Map<String, dynamic>?;
           final cardId = args?['cardId'] as String?;
           if (cardId != null) {
-            return ClaimPage(cardId: cardId);
+            return MarbleBackground(
+              child: ClaimPage(cardId: cardId),
+            );
           }
-          return const HomePage();
+          return const MarbleBackground(
+            child: HomePage(),
+          );
         },
         '/card-detail': (context) {
           final args = ModalRoute.of(context)?.settings.arguments as Map<String, dynamic>?;
           final cardId = args?['cardId'] as String?;
           if (cardId != null) {
-            return CardDetailPage(cardId: cardId);
+            return MarbleBackground(
+              child: CardDetailPage(cardId: cardId),
+            );
           }
-          return const HomePage();
+          return const MarbleBackground(
+            child: HomePage(),
+          );
         },
       },
     );

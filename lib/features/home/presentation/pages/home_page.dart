@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import '../../../../core/constants/env_constants.dart';
+import '../../../../core/theme/marble_background.dart';
 import '../../../settings/presentation/pages/settings_page.dart';
 import '../../../nfc/presentation/widgets/nfc_scanner_widget.dart';
 
@@ -75,6 +76,7 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
     }
 
     return Scaffold(
+      backgroundColor: Colors.transparent,
       appBar: AppBar(
         title: const Text(
           'KATAOMOI APP',
@@ -83,7 +85,7 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
             letterSpacing: 1.2,
           ),
         ),
-        backgroundColor: Theme.of(context).colorScheme.inversePrimary,
+        backgroundColor: Colors.transparent,
         elevation: 0,
         actions: [
           Container(
@@ -102,23 +104,12 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
           ),
         ],
       ),
-      body: Container(
-        decoration: BoxDecoration(
-          gradient: LinearGradient(
-            begin: Alignment.topCenter,
-            end: Alignment.bottomCenter,
-            colors: [
-              Theme.of(context).colorScheme.inversePrimary.withOpacity(0.1),
-              Colors.white,
-            ],
-          ),
-        ),
-        child: SafeArea(
-          child: Padding(
-            padding: const EdgeInsets.all(24.0),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.stretch,
-              children: [
+      body: SafeArea(
+        child: SingleChildScrollView(
+          padding: const EdgeInsets.all(24.0),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.stretch,
+            children: [
                 // ロゴ・アイコン（アニメーション付き）
                 AnimatedBuilder(
                   animation: _logoAnimation,
@@ -162,7 +153,7 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
                           style: TextStyle(
                             fontSize: 28,
                             fontWeight: FontWeight.bold,
-                            color: Colors.black87,
+                            color: Colors.white,
                           ),
                           textAlign: TextAlign.center,
                         ),
@@ -178,11 +169,11 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
                       opacity: _fadeAnimation.value,
                       child: Transform.translate(
                         offset: Offset(0, 20 * (1 - _fadeAnimation.value)),
-                        child: Text(
+                        child: const Text(
                           'カードIDを入力して操作を開始してください',
                           style: TextStyle(
                             fontSize: 16,
-                            color: Colors.grey[600],
+                            color: Colors.white70,
                           ),
                           textAlign: TextAlign.center,
                         ),
@@ -198,7 +189,7 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
                     borderRadius: BorderRadius.circular(16),
                     boxShadow: [
                       BoxShadow(
-                        color: Colors.black.withOpacity(0.05),
+                        color: Colors.purple.withOpacity(0.2),
                         blurRadius: 10,
                         offset: const Offset(0, 4),
                       ),
@@ -214,7 +205,7 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
                         borderSide: BorderSide.none,
                       ),
                       filled: true,
-                      fillColor: Colors.white,
+                      fillColor: Colors.white.withOpacity(0.7),
                       prefixIcon: Container(
                         margin: const EdgeInsets.all(8),
                         padding: const EdgeInsets.all(8),
@@ -240,116 +231,11 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
                 NfcScannerWidget(
                   onNfcDetected: (data) {
                     _cardIdController.text = data;
-                    ScaffoldMessenger.of(context).showSnackBar(
-                      SnackBar(
-                        content: Text('NFCから取得: $data'),
-                        backgroundColor: Colors.blue,
-                        duration: const Duration(seconds: 2),
-                      ),
-                    );
+                    // NFC取得後、自動的に詳細画面に移動
+                    _navigateToCardDetail();
                   },
                   buttonText: 'NFCから読み取り',
                   icon: Icons.nfc,
-                ),
-                const SizedBox(height: 24),
-                
-                // ボタン
-                Row(
-                  children: [
-                    Expanded(
-                      child: Container(
-                        height: 56,
-                        decoration: BoxDecoration(
-                          borderRadius: BorderRadius.circular(16),
-                          gradient: LinearGradient(
-                            colors: [
-                              Theme.of(context).colorScheme.primary,
-                              Theme.of(context).colorScheme.primary.withOpacity(0.8),
-                            ],
-                          ),
-                          boxShadow: [
-                            BoxShadow(
-                              color: Theme.of(context).colorScheme.primary.withOpacity(0.3),
-                              blurRadius: 8,
-                              offset: const Offset(0, 4),
-                            ),
-                          ],
-                        ),
-                        child: ElevatedButton(
-                          onPressed: () => _navigateToCardDetail(),
-                          style: ElevatedButton.styleFrom(
-                            backgroundColor: Colors.transparent,
-                            shadowColor: Colors.transparent,
-                            shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(16),
-                            ),
-                          ),
-                          child: const Row(
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            children: [
-                              Icon(Icons.info_outline, color: Colors.white),
-                              SizedBox(width: 8),
-                              Text(
-                                'カード詳細',
-                                style: TextStyle(
-                                  fontSize: 16,
-                                  fontWeight: FontWeight.bold,
-                                  color: Colors.white,
-                                ),
-                              ),
-                            ],
-                          ),
-                        ),
-                      ),
-                    ),
-                    const SizedBox(width: 16),
-                    Expanded(
-                      child: Container(
-                        height: 56,
-                        decoration: BoxDecoration(
-                          borderRadius: BorderRadius.circular(16),
-                          gradient: LinearGradient(
-                            colors: [
-                              Colors.green,
-                              Colors.green.withOpacity(0.8),
-                            ],
-                          ),
-                          boxShadow: [
-                            BoxShadow(
-                              color: Colors.green.withOpacity(0.3),
-                              blurRadius: 8,
-                              offset: const Offset(0, 4),
-                            ),
-                          ],
-                        ),
-                        child: ElevatedButton(
-                          onPressed: () => _navigateToClaim(),
-                          style: ElevatedButton.styleFrom(
-                            backgroundColor: Colors.transparent,
-                            shadowColor: Colors.transparent,
-                            shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(16),
-                            ),
-                          ),
-                          child: const Row(
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            children: [
-                              Icon(Icons.check_circle_outline, color: Colors.white),
-                              SizedBox(width: 8),
-                              Text(
-                                'Claim',
-                                style: TextStyle(
-                                  fontSize: 16,
-                                  fontWeight: FontWeight.bold,
-                                  color: Colors.white,
-                                ),
-                              ),
-                            ],
-                          ),
-                        ),
-                      ),
-                    ),
-                  ],
                 ),
                 
                 const SizedBox(height: 40),
@@ -358,11 +244,15 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
                 Container(
                   padding: const EdgeInsets.all(20),
                   decoration: BoxDecoration(
-                    color: Colors.white,
+                    color: Colors.white.withOpacity(0.7),
                     borderRadius: BorderRadius.circular(16),
+                    border: Border.all(
+                      color: Theme.of(context).colorScheme.primary.withOpacity(0.6),
+                      width: 1,
+                    ),
                     boxShadow: [
                       BoxShadow(
-                        color: Colors.black.withOpacity(0.05),
+                        color: Colors.purple.withOpacity(0.15),
                         blurRadius: 10,
                         offset: const Offset(0, 4),
                       ),
@@ -379,19 +269,20 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
                             size: 24,
                           ),
                           const SizedBox(width: 8),
-                          const Text(
+                          Text(
                             '使い方',
                             style: TextStyle(
                               fontSize: 18,
                               fontWeight: FontWeight.bold,
+                              color: Theme.of(context).colorScheme.primary,
                             ),
                           ),
                         ],
                       ),
                       const SizedBox(height: 16),
-                      _buildStepItem('1', 'カードIDを入力してください'),
-                      _buildStepItem('2', '「カード詳細」でカード情報を確認'),
-                      _buildStepItem('3', '「Claim」でカードをClaimできます'),
+                      _buildStepItem('1', 'NFCボタンをタップして名刺を読み取り'),
+                      _buildStepItem('2', '自動的に詳細画面が開きます'),
+                      _buildStepItem('3', 'カード情報の確認やClaimができます'),
                     ],
                   ),
                 ),
@@ -399,7 +290,6 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
             ),
           ),
         ),
-      ),
     );
   }
 
@@ -436,7 +326,9 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
   void _navigateToSettings() {
     Navigator.of(context).push(
       MaterialPageRoute(
-        builder: (context) => const SettingsPage(),
+        builder: (context) => const MarbleBackground(
+          child: SettingsPage(),
+        ),
       ),
     );
   }
@@ -466,10 +358,13 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
           ),
           const SizedBox(width: 12),
           Expanded(
-            child: Text(
-              text,
-              style: const TextStyle(fontSize: 14),
+          child: Text(
+            text,
+            style: const TextStyle(
+              fontSize: 14,
+              color: Colors.black87,
             ),
+          ),
           ),
         ],
       ),

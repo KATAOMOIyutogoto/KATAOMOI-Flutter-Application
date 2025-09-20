@@ -226,3 +226,38 @@ workers/
 - **状態管理**: Riverpod
 - **HTTP通信**: Dio
 - **ディープリンク**: uni_links
+- **NFC機能**: nfc_manager (iOS/Android), Web NFC API (Web)
+
+## プラットフォーム対応
+
+### Web
+- Chrome 89以降でNFC機能をサポート
+- 美しいマーブル背景とアニメーション
+- レスポンシブデザイン
+
+### iOS
+- iPhone 7以降でNFC機能をサポート
+- iPhone XS以降でバックグラウンドNFC読み取り
+- TestFlight/App Store配布対応
+- 詳細な設定ファイルとREADME付き
+
+### Android
+- Android 4.4以降でNFC機能をサポート
+- Google Play Store配布対応
+
+## iOS開発環境セットアップ
+
+### 必要な環境
+- macOS
+- Xcode 12.0以降
+- CocoaPods
+- Apple Developer Account
+
+### セットアップ手順
+1. `ios/ios_config.md` を参照
+2. Xcodeで `ios/Runner.xcworkspace` を開く
+3. Bundle IdentifierとTeamを設定
+4. NFC Capabilityを有効化
+5. ビルド・実行
+
+詳細は `ios/README.md` を参照してください。

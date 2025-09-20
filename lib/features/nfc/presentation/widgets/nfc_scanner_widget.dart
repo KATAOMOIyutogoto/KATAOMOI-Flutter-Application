@@ -35,6 +35,46 @@ class _NfcScannerWidgetState extends ConsumerState<NfcScannerWidget> {
     });
   }
 
+  String? _extractCardIdFromUrl(String url) {
+    try {
+      print('NFC URL解析: $url'); // デバッグ用
+      
+      final uri = Uri.parse(url);
+      final pathSegments = uri.pathSegments;
+      
+      // URLが go.kataomoi.org/c/:cardId または go.kataomoi.jp/c/:cardId の形式かチェック
+      if (pathSegments.length >= 2 && pathSegments[0] == 'c') {
+        final cardId = pathSegments[1];
+        print('パスセグメントから抽出: $cardId'); // デバッグ用
+        return cardId;
+      }
+      
+      // その他の形式のURLからもIDを抽出を試行（より柔軟な正規表現）
+      final regex = RegExp(r'/c/([a-f0-9\-]{36})', caseSensitive: false);
+      final match = regex.firstMatch(url);
+      if (match != null) {
+        final cardId = match.group(1);
+        print('正規表現から抽出: $cardId'); // デバッグ用
+        return cardId;
+      }
+      
+      // UUID形式のIDを直接検索（最後の手段）
+      final uuidRegex = RegExp(r'([a-f0-9]{8}-[a-f0-9]{4}-[a-f0-9]{4}-[a-f0-9]{4}-[a-f0-9]{12})', caseSensitive: false);
+      final uuidMatch = uuidRegex.firstMatch(url);
+      if (uuidMatch != null) {
+        final cardId = uuidMatch.group(1);
+        print('UUID正規表現から抽出: $cardId'); // デバッグ用
+        return cardId;
+      }
+      
+      print('ID抽出失敗: $url'); // デバッグ用
+      return null;
+    } catch (e) {
+      print('URL解析エラー: $e'); // デバッグ用
+      return null;
+    }
+  }
+
   Future<void> _startNfcScan() async {
     if (!_isNfcAvailable) {
       _showErrorSnackBar('NFCが利用できません。デバイスの設定を確認してください。');
@@ -46,8 +86,13 @@ class _NfcScannerWidgetState extends ConsumerState<NfcScannerWidget> {
     await NfcService.startNfcSession(
       onNfcDetected: (data) {
         ref.read(nfcProvider.notifier).onNfcDetected(data);
-        widget.onNfcDetected?.call(data);
-        _showSuccessSnackBar('NFCデータを取得しました: $data');
+        
+        // URLからカードIDを抽出
+        final cardId = _extractCardIdFromUrl(data);
+        final displayData = cardId ?? data;
+        
+        widget.onNfcDetected?.call(displayData);
+        _showSuccessSnackBar('NFCデータを取得しました: $displayData');
       },
       onError: (error) {
         ref.read(nfcProvider.notifier).onNfcError(error);
@@ -83,15 +128,14 @@ class _NfcScannerWidgetState extends ConsumerState<NfcScannerWidget> {
     return Container(
       decoration: BoxDecoration(
         borderRadius: BorderRadius.circular(16),
-        gradient: LinearGradient(
-          colors: [
-            Theme.of(context).colorScheme.primary,
-            Theme.of(context).colorScheme.primary.withOpacity(0.8),
-          ],
+        color: Colors.white.withOpacity(0.6),
+        border: Border.all(
+          color: Theme.of(context).colorScheme.primary.withOpacity(0.8),
+          width: 2,
         ),
         boxShadow: [
           BoxShadow(
-            color: Theme.of(context).colorScheme.primary.withOpacity(0.3),
+            color: Theme.of(context).colorScheme.primary.withOpacity(0.2),
             blurRadius: 8,
             offset: const Offset(0, 4),
           ),
@@ -111,18 +155,18 @@ class _NfcScannerWidgetState extends ConsumerState<NfcScannerWidget> {
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
             if (nfcState is NfcScanning)
-              const SizedBox(
+              SizedBox(
                 width: 20,
                 height: 20,
                 child: CircularProgressIndicator(
                   strokeWidth: 2,
-                  color: Colors.white,
+                  color: Theme.of(context).colorScheme.primary,
                 ),
               )
             else
               Icon(
                 widget.icon ?? Icons.nfc,
-                color: Colors.white,
+                color: Theme.of(context).colorScheme.primary,
                 size: 24,
               ),
             const SizedBox(width: 12),
@@ -130,10 +174,10 @@ class _NfcScannerWidgetState extends ConsumerState<NfcScannerWidget> {
               nfcState is NfcScanning
                   ? 'NFC読み取り中...'
                   : widget.buttonText ?? 'NFCを読み取り',
-              style: const TextStyle(
+              style: TextStyle(
                 fontSize: 16,
                 fontWeight: FontWeight.bold,
-                color: Colors.white,
+                color: Theme.of(context).colorScheme.primary,
               ),
             ),
           ],
@@ -142,4 +186,6 @@ class _NfcScannerWidgetState extends ConsumerState<NfcScannerWidget> {
     );
   }
 }
+
+
 
